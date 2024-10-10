@@ -2,15 +2,17 @@ import { Status } from "tweeter-shared";
 import { Link } from "react-router-dom";
 import Post from "../statusItem/Post";
 import userNavigationHook from "../userItem/userNavigationHook";
+import { UserNavigationHookView, UserNavigationHookPresenter } from "../../presenters/userNavigationHookPresenter";
 
 export const PAGE_SIZE = 10;
 interface Props {
     item: Status;
+    presenterGenerator: (view: UserNavigationHookView) => UserNavigationHookPresenter
   }
 
 const StatusItem = (props: Props) => {
   
-  const navigateToUser = userNavigationHook();
+  const navigateToUser = userNavigationHook(props);
 
     return (
       <div className="col bg-light mx-0 px-0">
@@ -39,7 +41,7 @@ const StatusItem = (props: Props) => {
             </h2>
             {props.item.formattedDate}
             <br />
-            <Post status={props.item} />
+            <Post status={props.item} presenterGenerator={(view: UserNavigationHookView) => new UserNavigationHookPresenter(view)} />
           </div>
         </div>
       </div>

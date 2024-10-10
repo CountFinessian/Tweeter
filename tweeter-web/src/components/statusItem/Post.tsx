@@ -1,13 +1,15 @@
-import { AuthToken, FakeData, Status, User, Type } from "tweeter-shared";
+import { Status, Type } from "tweeter-shared";
 import { Link } from "react-router-dom";
 import userNavigationHook from "../userItem/userNavigationHook";
+import { UserNavigationHookView, UserNavigationHookPresenter } from "../../presenters/userNavigationHookPresenter";
 
 interface Props {
   status: Status;
+  presenterGenerator: (view: UserNavigationHookView) => UserNavigationHookPresenter
 }
 
 const Post = (props: Props) => {
-  const navigateToUser = userNavigationHook();
+  const navigateToUser = userNavigationHook(props);
   
   return (
     <>

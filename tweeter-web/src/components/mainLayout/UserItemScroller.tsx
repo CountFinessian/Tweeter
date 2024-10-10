@@ -5,6 +5,7 @@ import UserItem from "../userItem/UserItem";
 import useToastListener from "../toaster/ToastListenerHook";
 import useInfo from "../userInfo/userInfoHook";
 import { UserItemPresenter, UserItemView } from "../../presenters/UserItemPresenter";
+import { UserNavigationHookPresenter, UserNavigationHookView } from "../../presenters/userNavigationHookPresenter";
 
 interface Props {
   presenterGenerator: (view: UserItemView) => UserItemPresenter;
@@ -44,13 +45,13 @@ const UserItemScroller = (props: Props) => {
     presenter.reset();
   }
 
-  const listener: UserItemView = {
+  const view: UserItemView = {
     addItems: (newItems: User[]) =>
       setNewItems(newItems),
     displayErrorMessage: displayErrorMessage
   }
 
-  const [presenter] = useState(props.presenterGenerator(listener));
+  const [presenter] = useState(props.presenterGenerator(view));
 
   const loadMoreItems = async () => {
     presenter.loadMoreItems(authToken!, displayedUser!.alias);
@@ -71,7 +72,7 @@ const UserItemScroller = (props: Props) => {
             key={index}
             className="row mb-3 mx-0 px-0 border rounded bg-white"
           >
-            <UserItem value={item} />
+            <UserItem value={item} presenterGenerator={(view: UserNavigationHookView) => new UserNavigationHookPresenter(view)}/>
           </div>
         ))}
       </InfiniteScroll>
