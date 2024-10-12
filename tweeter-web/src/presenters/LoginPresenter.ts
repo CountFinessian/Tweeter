@@ -17,26 +17,7 @@ export class LoginPresenter {
         this.userService = new UserService();
         this.view = view;
     };
-
-    public checkSubmitButtonStatus (
-        alias: string,
-        password: string
-    ): boolean {
-        return !alias || !password;
-      };
-    
-    public loginOnEnter (
-        event: React.KeyboardEvent<HTMLElement>,
-        rememberMe: boolean,
-        alias: string,
-        password: string,
-        originalUrl: string
-    ) {
-    if (event.key == "Enter" && !this.checkSubmitButtonStatus(alias, password)) {
-        this.doLogin(rememberMe, alias, password, originalUrl);
-    }
-    };
-    
+        
     public async doLogin (
         rememberMe: boolean,
         alias: string,
