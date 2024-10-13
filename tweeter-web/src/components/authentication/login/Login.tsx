@@ -24,7 +24,6 @@ const Login = (props: Props) => {
   const { displayErrorMessage } = useToastListener();
 
   const view: LoginView = {
-    setIsLoading: setIsLoading,
     displayErrorMessage: displayErrorMessage,
     navigate: navigate,
     updateUserInfo: updateUserInfo
@@ -33,9 +32,20 @@ const Login = (props: Props) => {
 
   const loginOnEnter = (event: React.KeyboardEvent<HTMLElement>) => {
     if (event.key == "Enter" && checkSubmitButtonStatus()) {
-      presenter.doLogin(rememberMe, alias, password, props.originalUrl!);
+      doLogin(rememberMe, alias, password, props.originalUrl);
     }
   };
+
+  const doLogin = (
+    rememberMe : boolean,
+    alias : string, 
+    password : string, 
+    originalUrl : string | undefined) => {
+    
+    setIsLoading(true);
+    presenter.doLogin(rememberMe, alias, password, originalUrl);
+    setIsLoading(false);
+    };
 
   const checkSubmitButtonStatus = (): boolean => {
     return !alias || !password;
@@ -71,7 +81,7 @@ const Login = (props: Props) => {
       setRememberMe={setRememberMe}
       submitButtonDisabled={() => checkSubmitButtonStatus()}
       isLoading={isLoading}
-      submit={() => presenter.doLogin(rememberMe, alias, password, props.originalUrl)}
+      submit={() => doLogin(rememberMe, alias, password, props.originalUrl)}
     />
   );
 };
