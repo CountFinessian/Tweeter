@@ -1,29 +1,22 @@
-import { AuthToken, User } from "tweeter-shared";
-import { UserService } from "../model/service/UserService";
 import { Buffer } from "buffer";
 import { SetStateAction } from "react";
+import { AuthPresenter, AuthView } from "./AuthPresenter";
 
-export interface RegisterView {
+export interface RegisterView extends AuthView {
     setImageUrl(url: string): void;
     setImageBytes(bytes: Uint8Array) : void;
     setImageFileExtension: (extension: SetStateAction<string>) => void;
-    updateUserInfo: (currentUser: User, displayedUser: User | null, authToken: AuthToken, remember: boolean) => void;
-    navigate: (url: string) => void;
-    displayErrorMessage: (message: string) => void;
-}
+  }
 
-export class RegisterPresenter {
-    private userService: UserService;
-    private view: RegisterView;
-    
-    public constructor(view: RegisterView){
-        this.userService = new UserService();
-        this.view = view;
-    };
+export class RegisterPresenter extends AuthPresenter {
+  
+  protected get registerView(): RegisterView {
+    return this.view as RegisterView;
+}
 
 public handleImageFile (file: File | undefined)  {
     if (file) {
-      this.view.setImageUrl(URL.createObjectURL(file));
+      this.registerView.setImageUrl(URL.createObjectURL(file));
 
       const reader = new FileReader();
       reader.onload = (event: ProgressEvent<FileReader>) => {
@@ -38,18 +31,18 @@ public handleImageFile (file: File | undefined)  {
           "base64"
         );
 
-        this.view.setImageBytes(bytes);
+        this.registerView.setImageBytes(bytes);
       };
       reader.readAsDataURL(file);
 
       // Set image file extension (and move to a separate method)
       const fileExtension = this.getFileExtension(file);
       if (fileExtension) {
-        this.view.setImageFileExtension(fileExtension);
+        this.registerView.setImageFileExtension(fileExtension);
       }
     } else {
-      this.view.setImageUrl("");
-      this.view.setImageBytes(new Uint8Array());
+      this.registerView.setImageUrl("");
+      this.registerView.setImageBytes(new Uint8Array());
     }
   };
 
@@ -65,22 +58,19 @@ public handleImageFile (file: File | undefined)  {
     imageBytes: Uint8Array,
     imageFileExtension: string,
     rememberMe: boolean) {
-    try {
-      const [user, authToken] = await this.userService.register(
-        firstName,
-        lastName,
-        alias,
-        password,
-        imageBytes,
-        imageFileExtension
-      );
 
-      this.view.updateUserInfo(user, user, authToken, rememberMe);
-      this.view.navigate("/");
-    } catch (error) {
-      this.view.displayErrorMessage(
-        `Failed to register user because of exception: ${error}`
-      );
-    } 
+      this.doFailureReportingOperation(async () => {
+        const [user, authToken] = await this.service.register(
+          firstName,
+          lastName,
+          alias,
+          password,
+          imageBytes,
+          imageFileExtension
+        );
+  
+        this.registerView.updateUserInfo(user, user, authToken, rememberMe);
+        this.registerView.navigate("/");
+      }, "register user");
   };
 }

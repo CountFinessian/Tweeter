@@ -1,21 +1,9 @@
-import { AuthToken, Status, User } from "tweeter-shared";
-import { UserService } from "../model/service/UserService";
+import { AuthPresenter, AuthView } from "./AuthPresenter";
 
 
-export interface LoginView {
-    displayErrorMessage: (message: string) => void;
-    navigate: (url: string) => void;
-    updateUserInfo: (currentUser: User, displayedUser: User | null, authToken: AuthToken, remember: boolean) => void;
-}
+export interface LoginView extends AuthView{}
 
-export class LoginPresenter {
-    private userService: UserService;
-    private view: LoginView;
-    
-    public constructor(view: LoginView){
-        this.userService = new UserService();
-        this.view = view;
-    };
+export class LoginPresenter extends AuthPresenter {
         
     public async doLogin (
         rememberMe: boolean,
@@ -23,20 +11,16 @@ export class LoginPresenter {
         password: string,
         originalUrl?: string
     ) {
-    try {
-        const [user, authToken] = await this.userService.login(alias, password);
+        this.doFailureReportingOperation(async () => {
+            const [user, authToken] = await this.service.login(alias, password);
 
-        this.view.updateUserInfo(user, user, authToken, rememberMe);
-
-        if (!!originalUrl) {
-        this.view.navigate(originalUrl);
-        } else {
-        this.view.navigate("/");
-        }
-    } catch (error) {
-        this.view.displayErrorMessage(
-        `Failed to log user in because of exception: ${error}`
-        );
-    }
+            this.view.updateUserInfo(user, user, authToken, rememberMe);
+    
+            if (!!originalUrl) {
+            this.view.navigate(originalUrl);
+            } else {
+            this.view.navigate("/");
+            }}, 
+            "log user in");
     };
 }
