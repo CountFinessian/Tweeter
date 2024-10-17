@@ -8,15 +8,11 @@ export interface RegisterView extends AuthView {
     setImageFileExtension: (extension: SetStateAction<string>) => void;
   }
 
-export class RegisterPresenter extends AuthPresenter {
-  
-  protected get registerView(): RegisterView {
-    return this.view as RegisterView;
-}
+export class RegisterPresenter extends AuthPresenter<RegisterView> {
 
 public handleImageFile (file: File | undefined)  {
     if (file) {
-      this.registerView.setImageUrl(URL.createObjectURL(file));
+      this.view.setImageUrl(URL.createObjectURL(file));
 
       const reader = new FileReader();
       reader.onload = (event: ProgressEvent<FileReader>) => {
@@ -31,18 +27,18 @@ public handleImageFile (file: File | undefined)  {
           "base64"
         );
 
-        this.registerView.setImageBytes(bytes);
+        this.view.setImageBytes(bytes);
       };
       reader.readAsDataURL(file);
 
       // Set image file extension (and move to a separate method)
       const fileExtension = this.getFileExtension(file);
       if (fileExtension) {
-        this.registerView.setImageFileExtension(fileExtension);
+        this.view.setImageFileExtension(fileExtension);
       }
     } else {
-      this.registerView.setImageUrl("");
-      this.registerView.setImageBytes(new Uint8Array());
+      this.view.setImageUrl("");
+      this.view.setImageBytes(new Uint8Array());
     }
   };
 
@@ -69,8 +65,8 @@ public handleImageFile (file: File | undefined)  {
           imageFileExtension
         );
   
-        this.registerView.updateUserInfo(user, user, authToken, rememberMe);
-        this.registerView.navigate("/");
+        this.view.updateUserInfo(user, user, authToken, rememberMe);
+        this.view.navigate("/");
       }, "register user");
   };
 }

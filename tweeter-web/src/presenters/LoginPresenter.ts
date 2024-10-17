@@ -3,7 +3,7 @@ import { AuthPresenter, AuthView } from "./AuthPresenter";
 
 export interface LoginView extends AuthView{}
 
-export class LoginPresenter extends AuthPresenter {
+export class LoginPresenter extends AuthPresenter<LoginView> {
         
     public async doLogin (
         rememberMe: boolean,

@@ -1,39 +1,24 @@
 import { AuthToken, Status, User } from "tweeter-shared";
-import { UserService } from "../model/service/UserService";
+import { AuthPresenter, MessageView } from "./AuthPresenter";
+import Post from "../components/statusItem/Post";
 
-export interface PostView {
-    displayInfoMessage(message: string, duration: number): void;
-    displayErrorMessage(message: string): void;
-    clearLastInfoMessage(): void;
+export interface PostView extends MessageView {
     setPost(value: string): void;
 }
 
-export class PostPresenter {
-    private userService: UserService;
-    private view: PostView;
-    
-    public constructor(view: PostView){
-        this.userService = new UserService();
-        this.view = view;
-    };
+export class PostPresenter extends AuthPresenter<PostView> {
+
 
     public async submitPost (currentUser: User | null, post: string, authToken: AuthToken | null){
+        this.doFailureReportingOperation(async () => {this.view.displayInfoMessage("Posting status...", 0);
     
-        try {
-            this.view.displayInfoMessage("Posting status...", 0);
-    
-          const status = new Status(post, currentUser!, Date.now());
-    
-          await this.userService.postStatus(authToken!, status);
-    
-          this.view.setPost("");
-          this.view.displayInfoMessage("Status posted!", 2000);
-        } catch (error) {
-            this.view.displayErrorMessage(
-            `Failed to post the status because of exception: ${error}`
-          );
-        } finally {
+            const status = new Status(post, currentUser!, Date.now());
+      
+            await this.service.postStatus(authToken!, status);
+      
+            this.view.setPost("");
+            this.view.displayInfoMessage("Status posted!", 2000);}, 
+            "post the status");
             this.view.clearLastInfoMessage();
         }
     };   
-}
