@@ -7,12 +7,11 @@ import { UserNavigationHookView, UserNavigationHookPresenter } from "../../prese
 export const PAGE_SIZE = 10;
 interface Props {
     item: Status;
-    presenterGenerator: (view: UserNavigationHookView) => UserNavigationHookPresenter
   }
 
 const StatusItem = (props: Props) => {
   
-  const navigateToUser = userNavigationHook(props);
+  const navigateToUser = userNavigationHook();
 
     return (
       <div className="col bg-light mx-0 px-0">
