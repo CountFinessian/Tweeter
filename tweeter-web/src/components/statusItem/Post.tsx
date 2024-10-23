@@ -9,7 +9,7 @@ interface Props {
 }
 
 const Post = (props: Props) => {
-  const navigateToUser = userNavigationHook(props);
+  const navigateToUser = userNavigationHook();
   
   return (
     <>

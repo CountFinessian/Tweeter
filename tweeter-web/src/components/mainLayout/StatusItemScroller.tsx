@@ -72,7 +72,7 @@ return (
             key={index}
             className="row mb-3 mx-0 px-0 border rounded bg-white"
           >
-          <StatusItem item={item} presenterGenerator={(view: UserNavigationHookView) => new UserNavigationHookPresenter(view)}/>
+          <StatusItem item={item}/>
           </div>
         ))}
       </InfiniteScroll>

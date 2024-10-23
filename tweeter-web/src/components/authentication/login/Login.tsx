@@ -10,7 +10,7 @@ import { LoginPresenter, LoginView } from "../../../presenters/LoginPresenter";
 
 interface Props {
   originalUrl?: string;
-  presenterGenerator: (view: LoginView) => LoginPresenter;
+  presenter?: LoginPresenter;
 }
 
 const Login = (props: Props) => {
@@ -28,7 +28,7 @@ const Login = (props: Props) => {
     navigate: navigate,
     updateUserInfo: updateUserInfo
   }
-  const [presenter] = useState(props.presenterGenerator(view));
+  const [presenter] = useState(props.presenter?? new LoginPresenter(view));
 
   const loginOnEnter = (event: React.KeyboardEvent<HTMLElement>) => {
     if (event.key == "Enter" && checkSubmitButtonStatus()) {

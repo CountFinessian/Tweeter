@@ -8,11 +8,8 @@ import AuthenticationFields from "../AuthenticationFields";
 import useInfo from "../../userInfo/userInfoHook";
 import { RegisterPresenter, RegisterView } from "../../../presenters/RegisterPresenter";
 
-interface Props {
-  presenterGenerator: (view: RegisterView) => RegisterPresenter;
-}
 
-const Register = (props: Props) => {
+const Register = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [alias, setAlias] = useState("");
@@ -46,7 +43,7 @@ const Register = (props: Props) => {
     updateUserInfo: updateUserInfo
   }
 
-  const [presenter] = useState(props.presenterGenerator(view));
+  const [presenter] = useState(new RegisterPresenter(view));
 
   const registerOnEnter = (event: React.KeyboardEvent<HTMLElement>) => {
     if (event.key == "Enter" && !checkSubmitButtonStatus()) {

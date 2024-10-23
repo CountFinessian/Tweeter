@@ -72,7 +72,7 @@ const UserItemScroller = (props: Props) => {
             key={index}
             className="row mb-3 mx-0 px-0 border rounded bg-white"
           >
-            <UserItem value={item} presenterGenerator={(view: UserNavigationHookView) => new UserNavigationHookPresenter(view)}/>
+            <UserItem item={item}/>
           </div>
         ))}
       </InfiniteScroll>

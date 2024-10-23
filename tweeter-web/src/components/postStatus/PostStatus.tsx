@@ -5,7 +5,7 @@ import useInfo from "../userInfo/userInfoHook";
 import { PostPresenter, PostView } from "../../presenters/PostPresenter";
 
 interface Props {
-  presenterGenerator: (view: PostView) => PostPresenter;
+  presenter?: PostPresenter;
 }
 
 const PostStatus = (props: Props) => {
@@ -32,7 +32,7 @@ const PostStatus = (props: Props) => {
     setPost: setPost
   }
 
-  const [presenter] = useState(props.presenterGenerator(view));
+  const [presenter] = useState(props.presenter?? new PostPresenter(view));
   
   const submitPost = async (event: React.MouseEvent) =>  {
     event.preventDefault();
@@ -48,6 +48,7 @@ const PostStatus = (props: Props) => {
           <textarea
             className="form-control"
             id="postStatusTextArea"
+            aria-label="information-TextArea"
             rows={10}
             placeholder="What's on your mind?"
             value={post}
@@ -59,6 +60,7 @@ const PostStatus = (props: Props) => {
         <div className="form-group">
           <button
             id="postStatusButton"
+            aria-label = "button"
             className="btn btn-md btn-primary me-1"
             type="button"
             disabled={checkButtonStatus()}
@@ -77,6 +79,7 @@ const PostStatus = (props: Props) => {
           </button>
           <button
             id="clearStatusButton"
+            aria-label = "clear"
             className="btn btn-md btn-secondary"
             type="button"
             disabled={checkButtonStatus()}

@@ -104,15 +104,12 @@ const UnauthenticatedRoutes = () => {
 
   return (
     <Routes>
-      <Route path="/login" element={<Login 
-      presenterGenerator={(view: LoginView) => new LoginPresenter(view)}
+      <Route path="/login" element={<Login originalUrl={location.pathname}
       />} />
       
-      <Route path="/register" element={<Register 
-      presenterGenerator={(view: RegisterView) => new RegisterPresenter(view)}/>} />
+      <Route path="/register" element={<Register  /> } />
 
-      <Route path="*" element={<Login originalUrl={location.pathname} 
-      presenterGenerator={(view: LoginView) => new LoginPresenter(view)}/>} />
+      <Route path="*" element={<Login originalUrl={location.pathname} />} />
     </Routes>
   );
 };

@@ -19,7 +19,7 @@ const MainLayout = () => {
                 <UserInfo presenterGenerator={(view: UserInfoView) => new UserInfoPresenter(view)}/>
               </div>
               <div className="p-3 border mt-1 rounded bg-light">
-                <PostStatus presenterGenerator={(view: PostView) => new PostPresenter(view)} />
+                <PostStatus/>
               </div>
             </div>
           </div>
