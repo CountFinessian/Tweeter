@@ -10,7 +10,9 @@ export class PostPresenter extends AuthPresenter<PostView> {
 
 
     public async submitPost (currentUser: User | null, post: string, authToken: AuthToken | null){
-        this.doFailureReportingOperation(async () => {this.view.displayInfoMessage("Posting status...", 0);
+        this.doFailureReportingOperation(async () => {
+            
+            this.view.displayInfoMessage("Posting status...", 0);
     
             const status = new Status(post, currentUser!, Date.now());
       

@@ -2,7 +2,6 @@ import "./AppNavbar.css";
 import { Container, Nav, Navbar } from "react-bootstrap";
 import { NavLink, useLocation } from "react-router-dom";
 import Image from "react-bootstrap/Image";
-import { AuthToken } from "tweeter-shared";
 import useToastListener from "../toaster/ToastListenerHook";
 import useInfo from "../userInfo/userInfoHook";
 import { LogoutPresenter, LogoutView } from "../../presenters/logoutPresenter";
