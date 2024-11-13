@@ -1,17 +1,28 @@
-import { AuthToken, Status } from "tweeter-shared";
-import { StatusItemPresenter, StatusItemView } from "./StatusItemPresenter";
-import { PAGE_SIZE } from "./PagedItemPresenter";
+import { AuthToken, Status, User } from "tweeter-shared";
+import { UserItemPresenter } from "./UserItemPresenter";
+import { PAGE_SIZE, PagedItemView } from "./PagedItemPresenter";
+import { serverFacade } from "./../model/service/networkLayer/serverFacade";
+import { StatusItemPresenter } from "./StatusItemPresenter";
 
 export class FeedPresenter extends StatusItemPresenter{
+
+    private facade: serverFacade;
+    
+    constructor(view: PagedItemView<Status>) {
+      super(view);
+      this.facade = new serverFacade(); // Initialize serverFacade instance
+    }
+    
     protected getMoreItems(authToken: AuthToken, userAlias: string): Promise<[Status[], boolean]> {
-      return this.service.loadMoreFeedItems(
-        authToken,
+
+      return this.facade.getMoreFeed({
+        token: authToken.token,
         userAlias,
-        PAGE_SIZE,
-        this.lastItem
-      );
+        pageSize: PAGE_SIZE,
+        lastItem: this.lastItem?.dto || null,
+      });
     }
     protected getItemDescription(): string {
       return "load feed";
     }
-}
+} 

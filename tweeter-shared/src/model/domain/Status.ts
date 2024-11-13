@@ -1,3 +1,5 @@
+import { PostSegmentDto } from "../dto/PostSegmentDto";
+import { StatusDto } from "../dto/StatusDto";
 import { PostSegment, Type } from "./PostSegment";
 import { User } from "./User";
 import { format } from "date-fns";
@@ -274,4 +276,36 @@ export class Status {
   public toJson(): string {
     return JSON.stringify(this);
   }
+
+  public get dto(): StatusDto {
+    return {
+      post: this._post,
+      user: this._user.dto,
+      timestamp: this._timestamp,
+      formattedDate: this.formattedDate,
+      segments: this._segments.map((segment) => segment.dto), // Serialize each segment
+    };
+  }
+
+  public static fromDto(dto: StatusDto | null): Status | null {
+    if (!dto) {
+      return null; // Return null if dto is null
+    }
+  
+    if (!dto.user) {
+      throw new Error("User data is required to create a Status object.");
+    }
+  
+    const user = User.fromDto(dto.user)!; // Non-null assertion because of prior check
+    const segments = dto.segments
+      .map((segmentDto) => PostSegment.fromDto(segmentDto))
+      .filter((segment): segment is PostSegment => segment !== null); // Filter out nulls
+  
+    const status = new Status(dto.post, user, dto.timestamp);
+    status.segments = segments; // Assign deserialized segments
+    return status;
+  }
+  
+  
+
 }
