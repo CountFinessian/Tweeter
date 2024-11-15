@@ -1,5 +1,7 @@
 import { AuthToken, User } from "tweeter-shared";
 import { AuthPresenter, MessageView } from "./AuthPresenter";
+import { serverFacade } from "../model/service/networkLayer/serverFacade";
+import { PagedItemView } from "./PagedItemPresenter";
 
 export interface UserInfoView extends MessageView {
     setIsFollower(isFollower: boolean): void;
@@ -9,6 +11,13 @@ export interface UserInfoView extends MessageView {
 
 export class UserInfoPresenter extends AuthPresenter<UserInfoView> {
 
+    private facade: serverFacade;
+
+    constructor(view: UserInfoView) {
+      super(view);
+      this.facade = new serverFacade(); // Initialize serverFacade instance
+    }
+    
     public async setIsFollowerStatus (
         authToken: AuthToken,
         currentUser: User,
@@ -18,7 +27,7 @@ export class UserInfoPresenter extends AuthPresenter<UserInfoView> {
           this.view.setIsFollower(false);
         } else {
           this.view.setIsFollower(
-            await this.service.getIsFollowerStatus(authToken!, currentUser!, displayedUser!)
+            await this.facade.getFollowerStatus({ token: authToken.token!, user: currentUser.dto!, selectedUser : displayedUser.dto! })
           );
         } }, "determine follower status");
       };
@@ -28,7 +37,7 @@ export class UserInfoPresenter extends AuthPresenter<UserInfoView> {
         displayedUser: User
       ) {
         this.doFailureReportingOperation(async () => {
-          this.view.setFolloweeCount(await this.service.getFolloweeCount(authToken, displayedUser));
+          this.view.setFolloweeCount(await this.facade.getFolloweeCount( { token: authToken.token, user: displayedUser.dto }));
         }, "get followees count");
       };
     
@@ -37,7 +46,7 @@ export class UserInfoPresenter extends AuthPresenter<UserInfoView> {
     displayedUser: User
     ) {
       this.doFailureReportingOperation(async () => {
-        this.view.setFollowerCount(await this.service.getFollowerCount(authToken, displayedUser));
+        this.view.setFollowerCount(await this.facade.getFollowerCount( { token: authToken.token, user: displayedUser.dto }));
       }, "get followers count");
     };
 
@@ -47,10 +56,10 @@ export class UserInfoPresenter extends AuthPresenter<UserInfoView> {
         this.doFailureReportingOperation(async () => {
           this.view.displayInfoMessage(`Following ${displayedUser!.name}...`, 0);
     
-          const [followerCount, followeeCount] = await this.service.follow(
-            authToken!,
-            displayedUser!
-          );
+          const [followerCount, followeeCount] = await this.facade.follow({
+            token: authToken.token!,
+            user: displayedUser!
+        });
     
           this.view.setIsFollower(true);
           this.view.setFollowerCount(followerCount);
@@ -68,9 +77,10 @@ export class UserInfoPresenter extends AuthPresenter<UserInfoView> {
         0
       );
 
-      const [followerCount, followeeCount] = await this.service.unfollow(
-        authToken!,
-        displayedUser!
+      const [followerCount, followeeCount] = await this.facade.unfollow({
+        token: authToken.token!,
+        user: displayedUser!
+    }
       );
 
       this.view.setIsFollower(false);
