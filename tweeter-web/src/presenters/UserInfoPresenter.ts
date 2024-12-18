@@ -58,7 +58,7 @@ export class UserInfoPresenter extends AuthPresenter<UserInfoView> {
     
           const [followerCount, followeeCount] = await this.facade.follow({
             token: authToken.token!,
-            user: displayedUser!
+            user: displayedUser.dto!
         });
     
           this.view.setIsFollower(true);

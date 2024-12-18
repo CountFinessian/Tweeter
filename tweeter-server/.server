@@ -1,0 +1,23 @@
+BUCKET='lambdas123456789'
+LAMBDA_ROLE='arn:aws:iam::474668429127:role/LambdaAutomater'
+EDIT_LAMBDALIST='
+tweeterGetFollowees | lambda/follow/GetFolloweesLambda.handler
+tweeterGetFollowers | lambda/follow/GetFollowersLambda.handler
+tweeterGetFeed | lambda/status/GetFeedLambda.handler
+tweeterGetStory | lambda/status/GetStoryLambda.handler
+tweeterpostStatus | lambda/user/GetpostStatus.handler
+tweeterisFollowerStatus | lambda/user/GetisFollowerStatus.handler
+tweeterGetFolloweeCount | lambda/user/getFolloweeCount.handler
+tweeterGetFollowerCount | lambda/user/getFollowerCount.handler
+tweeterGetFollowClickCount | lambda/user/getFollowClickCount.handler
+tweeterGetUnfollowClickCount | lambda/user/getUnfollowClickCount.handler
+tweeterGetUser | lambda/user/getUser.handler
+tweeterGetLogin | lambda/user/getLogin.handler
+tweeterGetRegister | lambda/user/getRegister.handler
+tweeterGetLogout | lambda/user/getLogout.handler
+Q1 | lambda/user/getUserForFeed.handler
+Q2 | lambda/user/sendFeedMessage.handler
+'
+LAMBDALAYER_ARN='arn:aws:lambda:us-east-1:474668429127:layer:tweeterLambdaLayer:33'
+
+REGION='us-east-1'

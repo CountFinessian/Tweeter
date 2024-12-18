@@ -281,9 +281,7 @@ export class Status {
     return {
       post: this._post,
       user: this._user.dto,
-      timestamp: this._timestamp,
-      formattedDate: this.formattedDate,
-      segments: this._segments.map((segment) => segment.dto), // Serialize each segment
+      timestamp: this._timestamp
     };
   }
 
@@ -297,12 +295,7 @@ export class Status {
     }
   
     const user = User.fromDto(dto.user)!; // Non-null assertion because of prior check
-    const segments = dto.segments
-      .map((segmentDto) => PostSegment.fromDto(segmentDto))
-      .filter((segment): segment is PostSegment => segment !== null); // Filter out nulls
-  
     const status = new Status(dto.post, user, dto.timestamp);
-    status.segments = segments; // Assign deserialized segments
     return status;
   }
   
